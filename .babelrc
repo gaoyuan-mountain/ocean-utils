@@ -1,0 +1,15 @@
+{
+  "presets": [
+    "react",
+    "latest"
+  ],
+  "plugins": [
+		"transform-object-rest-spread",
+		[
+      "transform-runtime",
+      {
+        "polyfill": false, "regenerator": true
+      }
+    ]
+	]
+}
