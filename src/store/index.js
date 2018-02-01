@@ -1,9 +1,10 @@
-let configStore;
+import configureStoreDev from './configureStore.dev';
+import configureStoreProd from './configureStore.prod';
 
-if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
-  configStore = require('./configureStore.prod').default;
-} else {
-  configStore = require('./configureStore.dev').default;
+export default function configStore(env) {
+  if (env === 'production' || env === 'test') {
+    return configureStoreProd;
+  } else {
+    return configureStoreDev;
+  }
 }
-
-export default configStore;

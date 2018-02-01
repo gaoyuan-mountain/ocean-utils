@@ -33,7 +33,7 @@ export function createSaga(configs, actionType) {
         payload,
       });
 
-      if (action.payload.callback) {
+      if (action.payload && action.payload.callback) {
         action.payload.callback();
       }
     } catch (error) {

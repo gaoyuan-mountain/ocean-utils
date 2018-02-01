@@ -21,15 +21,15 @@ module.exports = {
 		modules: [
 			"node_modules",
 			path.resolve(__dirname),
-    ],
-    extensions: ['.js', '.jsx'],
+		],
+		extensions: ['.js', '.jsx'],
 	},
 	module: {
 		loaders: [
 			{
 				test: /\.js(x?)$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader'
+				exclude: /node_modules/,
+				loader: 'babel-loader'
 			},
 		],
 	},
