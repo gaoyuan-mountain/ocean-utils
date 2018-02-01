@@ -1,4 +1,6 @@
-## configStore(env)(initialState, rootReducer, rootSaga)  生成store，env要求development/production
+## configStore(env)(initialState, rootReducer, rootSaga)
+- 生成store，env要求development/production
+
 examples：
 ```javascript
 export default configStore(process.env.NODE_ENV)({}, reducer, saga);
@@ -8,16 +10,13 @@ export default configStore(process.env.NODE_ENV)({}, reducer, saga);
 - 与 axios 一致
 
 ## helper
-### helper/actionGenerator  生成actionType对象
+### helper/actionGenerator
+- 生成actionType对象
 examples:
-
-
 ```javascript
 export const ACTIVITY_LIST = actionGenerator('ACTIVITY_LIST');
 ```
 get:
-
-
 ```javascript
 {
   ACTION: 'ACTIVITY_LIST',
@@ -26,15 +25,18 @@ get:
 }
 ```
 
-### helper/createSaga  生成saga
+### helper/createSaga
+- 生成saga
+
+```javascript
 function createSaga(configs, actionType)
+```
 
-configs是数组，包含promise和payload，promise是要异步执行的方法。payload时得到response以后adapter。promise.all得到了返回会依次作为入参传给payload方法。
+- configs是数组，包含promise和payload，promise是要异步执行的方法。payload时得到response以后adapter。promise.all得到了返回会依次作为入参传给payload方法。
 
-actionType是在成功/失败以后触发的事件类型
+- actionType是在成功/失败以后触发的事件类型
 
 examples:
-
 ```javascript
 const login = createSaga([{
   promise: authService.login,
