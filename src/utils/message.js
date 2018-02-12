@@ -46,6 +46,6 @@ export function MsgTrigger(eventName) {
     return null;
   }
   eventStack[eventName].map((callback) => {
-    callback();
+    return callback();
   });
 }

@@ -1,10 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class Lazyload extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentWillMount() {
     this.load(this.props);
   }
