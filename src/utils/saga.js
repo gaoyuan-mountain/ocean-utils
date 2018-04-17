@@ -4,7 +4,7 @@ import { eventChannel } from 'redux-saga';
 export function createSaga(configs, actionType) {
   function *sagaAction(action) {
     try {
-      const promises = configs.map((config) => call(config.promise));
+      const promises = configs.map((config) => call(config.promise, config.data || {}));
       const responses = yield all(promises);
       const payload = {};
       responses.map((response, index) => {
