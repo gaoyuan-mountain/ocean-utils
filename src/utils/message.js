@@ -41,11 +41,11 @@ export function MsgUnregister(eventName, callback) {
  * @param {string} eventName
  * @returns null
  */
-export function MsgTrigger(eventName) {
+export function MsgTrigger(eventName, data) {
   if (!eventStack[eventName]) {
     return null;
   }
   eventStack[eventName].map((callback) => {
-    return callback();
+    return callback(data);
   });
 }

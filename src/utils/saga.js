@@ -3,12 +3,14 @@ import { eventChannel } from 'redux-saga';
 
 export function createSaga(configs, actionType) {
   function *sagaAction(action) {
+    console.log(action);
     try {
-      const promises = configs.map((config) => call(config.promise, config.data || {}));
+      const promises = configs.map((config) => call(config.promise, action.payload));
       const responses = yield all(promises);
-      const payload = {};
+      let payload = {};
       responses.map((response, index) => {
-        return Object.assign(payload, configs[index].payload(response));
+        payload = Object.assign(payload, configs[index].payload(response));
+        return payload;
       });
 
       yield put({
@@ -17,14 +19,14 @@ export function createSaga(configs, actionType) {
       });
 
       if (action.payload && action.payload.callback) {
-        action.payload.callback();
+        action.payload.callback(payload);
       }
     } catch (error) {
       yield put({
         type: 'ERROR',
         payload: {
           error,
-          message: '获取活动列表失败',
+          message: '',
         },
       });
     }
