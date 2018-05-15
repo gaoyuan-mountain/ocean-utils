@@ -6,8 +6,25 @@ examples：
 export default configStore(process.env.NODE_ENV)({}, reducer, saga);
 ```
 
-## fetch
-- 与 axios 一致
+## http
+- import { http } from 'ocean-utils'
+- http.axios 与 axios 一致
+- http.setRequestInterceptor、http.setResponseInterceptor可以设置拦截器，建议在项目入口设置一次就可以
+- example：
+```javascript
+http.setResponseInterceptor(
+  res => {
+    if (res.data.code !== 1) {
+      throw new Error(res);
+    } else {
+      return res.data.data;
+    }
+  },
+  error => {
+    throw Error(error);
+  }
+)
+```
 
 ## helper
 ### helper/actionGenerator

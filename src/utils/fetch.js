@@ -1,36 +1,41 @@
 import axios from 'axios';
 
-// 防xsrf攻击，要在request header设置相关header
-axios.defaults.xsrfCookieName = 'csrfToken';
-axios.defaults.xsrfHeaderName = 'x-csrf-token';
+let instance = null;
 
-// 设置响应拦截器统一处理错误
-axios.interceptors.response.use(
-  res => {
-    if (res.data.code !== 1) {
-      throw new Error(res);
-    } else {
-      return res.data.data;
-    }
-  },
-  error => {
-    throw Error(error);
+class Http {
+  constructor() {
+    this.requestInterceptor = null;
+    this.responseInterceptor = null;
+    this.axios = axios;
+
+    this.axios.defaults.xsrfCookieName = 'csrfToken';
+    this.axios.defaults.xsrfHeaderName = 'x-csrf-token';
   }
-);
 
-// 设置请求拦截器, jwt
-// axios.interceptors.request.use((config) => {
-//   const token = localStorage.getItem('token');
+  setRequestInterceptor(interceptor) {
+    if (typeof interceptor !== 'function') {
+      console.log('setRequestInterceptor: 传入参数必须是funciton');
+      return;
+    }
+    this.requestInterceptor = interceptor;
+    this.axios.interceptors.request.use(interceptor);
+  }
 
-//   if (token && !config.url.includes('login')) {
-//     // [TODO] 跨域需要带cookie
-//     // config.withCredentials = true;
-//     config.headers = {
-//       ...config.headers,
-//       Authorization: token
-//     };
-//   }
-//   return config;
-// });
+  setResponseInterceptor(interceptor) {
+    if (typeof interceptor !== 'function') {
+      console.log('setRequestInterceptor: 传入参数必须是funciton');
+      return;
+    }
+    this.responseInterceptor = interceptor;
+    this.axios.interceptors.response.use(interceptor);
+  }
 
-export default axios;
+  static getInstance() {
+    if (!instance) {
+      return new Http();
+    }
+    return instance;
+  }
+}
+
+export default Http.getInstance();
