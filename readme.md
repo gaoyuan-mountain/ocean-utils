@@ -1,15 +1,18 @@
-## configStore(env)(initialState, rootReducer, rootSaga)
+## storeHelper
 - 生成store，env要求development/production
 
 examples：
 ```javascript
-export default configStore(process.env.NODE_ENV)({}, reducer, saga);
+import { storeHelper } from 'ocean-utils';
+
+export default storeHelper(process.env.NODE_ENV).configEmptyStore({});
 ```
 
-## http
-- import { http } from 'ocean-utils'
-- http.axios 与 axios 一致
-- http.setRequestInterceptor、http.setResponseInterceptor可以设置拦截器，建议在项目入口设置一次就可以
+## fetch
+- 对axios的封装
+- import { fetch } from 'ocean-utils'
+- fetch.axios 与 axios 一致
+- http.setRequestInterceptor(successFn, errorFn)、http.setResponseInterceptor(successFn, errorFn)可以设置拦截器，建议在项目入口设置一次就可以
 - example：
 ```javascript
 http.setResponseInterceptor(
@@ -42,7 +45,7 @@ get:
 }
 ```
 
-### helper/createSaga
+### sagaHelper
 - 生成saga
 
 ```javascript
@@ -55,10 +58,16 @@ function createSaga(configs, actionType)
 
 examples:
 ```javascript
-const login = createSaga([{
-  promise: authService.login,
-  payload: payload => payload,
-}], LOGIN);
+const login = sagaHelper.createSaga([{
+  promise: authService.profile,
+  payload: payload => ({profile: payload}),
+}], PROFILE);
+```
+
+- 同步逻辑
+examples：
+```javascript
+const login = sagaHelper.createSyncSaga(PROFILE);
 ```
 
 ## message  简单的事件队列，多用于child app之间通讯
@@ -80,4 +89,26 @@ MsgUnregister('EVENT:TOGGLE_MENU', this.toggleMenu);
 
 ```javascript
 MsgTrigger('EVENT:TOGGLE_MENU');
+```
+
+### Lazyload
+```javascript
+import { Lazyload } from 'ocean-utils';
+
+const createComponent = (component) => {
+  return () => {
+    const AsyncComponent = (
+      <Lazyload load={component}>
+        {
+          (Async) => {
+            return Async ? <Async /> : <Loading />;
+          }
+        }
+      </Lazyload>
+    );
+    return AsyncComponent;
+  };
+};
+
+<Route path="/solution/result/:id" component={createComponent(Solution)} exact />
 ```
