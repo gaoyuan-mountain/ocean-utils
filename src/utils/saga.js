@@ -3,7 +3,6 @@ import { eventChannel } from 'redux-saga';
 
 export function createSaga(configs, actionType) {
   function *sagaAction(action) {
-    console.log(action);
     try {
       const promises = configs.map((config) => call(config.promise, action.payload));
       const responses = yield all(promises);
@@ -34,6 +33,34 @@ export function createSaga(configs, actionType) {
 
   return function *sagaActionWatch() {
     yield takeEvery(actionType.ACTION, sagaAction);
+  };
+}
+
+export function createSyncSaga(actionType) {
+  function *sagaSyncAction(action) {
+    try {
+      const { callback, ...restParams } = action.payload || {};
+      yield put({
+        type: actionType.SUCCESS,
+        payload: restParams
+      });
+
+      if (callback) {
+        action.payload.callback(restParams);
+      }
+    } catch (error) {
+      yield put({
+        type: 'ERROR',
+        payload: {
+          error,
+          message: '',
+        },
+      });
+    }
+  }
+
+  return function *sagaSyncActionWatch() {
+    yield takeEvery(actionType.ACTION, sagaSyncAction);
   };
 }
 
