@@ -10,6 +10,11 @@ class Http {
 
     this.axios.defaults.xsrfCookieName = 'csrfToken';
     this.axios.defaults.xsrfHeaderName = 'x-csrf-token';
+    this.axios.defaults.withCredentials = true;
+  }
+
+  setDefaultConfig(configKey, configValue) {
+    this.axios.defaults[configKey] = configValue;
   }
 
   setRequestInterceptor(interceptor) {
