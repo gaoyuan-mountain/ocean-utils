@@ -15,7 +15,7 @@ export default storeHelper(process.env.NODE_ENV).configEmptyStore({});
 - http.setRequestInterceptor(successFn, errorFn)、http.setResponseInterceptor(successFn, errorFn)可以设置拦截器，建议在项目入口设置一次就可以
 - example：
 ```javascript
-http.setResponseInterceptor(
+fetch.setResponseInterceptor(
   res => {
     if (res.data.code !== 1) {
       throw new Error(res);
