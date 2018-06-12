@@ -1,7 +1,7 @@
-import { takeEvery, take, fork, cancel, put, call, all } from 'redux-saga/effects';
+import { takeEvery, takeLatest, throttle, take, fork, cancel, put, call, all } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
 
-export function createSaga(configs, actionType) {
+export function createSaga(configs, actionType, effect = 'takeEvery', throttleSecond = 500) {
   function *sagaAction(action) {
     try {
       const promises = configs.map((config) => call(config.promise, action.payload));
@@ -32,7 +32,16 @@ export function createSaga(configs, actionType) {
   }
 
   return function *sagaActionWatch() {
-    yield takeEvery(actionType.ACTION, sagaAction);
+    switch (effect) {
+      case 'takeLatest':
+        yield takeLatest(actionType.ACTION, sagaAction);
+        break;
+      case 'throttle':
+        yield throttle(throttleSecond, actionType.ACTION, sagaAction);
+        break;
+      default:
+      yield takeEvery(actionType.ACTION, sagaAction);
+    }
   };
 }
 
