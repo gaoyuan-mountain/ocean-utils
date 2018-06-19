@@ -25,7 +25,8 @@ export function MsgUnregister(eventName, callback) {
   if (!callback) {
     delete eventStack[eventName];
   } else if (eventStack[eventName]) {
-    eventStack[eventName] = eventStack[eventName].map((_callback) => {
+    // 改动 map => filter
+    eventStack[eventName] = eventStack[eventName].filter((_callback) => {
       return _callback !== callback;
     });
     if (eventStack[eventName].length === 0) {
